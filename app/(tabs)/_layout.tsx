@@ -1,14 +1,35 @@
+import { Colors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
-import { Text } from "react-native";
-
-// Text color: 1E1E1E
-// color not active: 71727A
-// active icon color: 006FFD
+import { Text, TouchableOpacity, useColorScheme } from "react-native";
 
 export default function TabLayout() {
+  const theme = useColorScheme() ?? "light";
+
   return (
-    <Tabs screenOptions={{}}>
+    <Tabs
+      screenOptions={{
+        tabBarStyle: {
+          borderTopWidth: 0,
+        },
+        headerShadowVisible: false,
+        headerRight: () => (
+          <TouchableOpacity
+            style={{ marginRight: 16 }}
+            onPress={() => {
+              /* Handle settings press */
+            }}
+          >
+			
+            <Ionicons
+              name="add"
+              size={32}
+              color={Colors[theme].neutral.dark.lightest}
+            />
+          </TouchableOpacity>
+        ),
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -16,10 +37,10 @@ export default function TabLayout() {
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{
-                color: focused ? "#1E1E1E" : color,
-                fontSize: 12,
-                fontWeight: focused ? "500" : "normal",
-                marginTop: 4,
+                color: focused ? Colors[theme].neutral.dark.darkest : color,
+                fontSize: 10,
+                fontWeight: focused ? "600" : "normal",
+                marginTop: 6,
               }}
             >
               Home
@@ -28,7 +49,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="home"
-              color={focused ? "#006FFD" : color}
+              color={focused ? Colors[theme].highlight.darkest : color}
               size={24}
             />
           ),
@@ -41,10 +62,10 @@ export default function TabLayout() {
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{
-                color: focused ? "#1E1E1E" : color,
-                fontSize: 12,
-                fontWeight: focused ? "500" : "normal",
-                marginTop: 4,
+                color: focused ? Colors[theme].neutral.dark.darkest : color,
+                fontSize: 10,
+                fontWeight: focused ? "600" : "normal",
+                marginTop: 6,
               }}
             >
               Members
@@ -53,7 +74,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="people"
-              color={focused ? "#006FFD" : color}
+              color={focused ? Colors[theme].highlight.darkest : color}
               size={24}
             />
           ),
@@ -66,10 +87,10 @@ export default function TabLayout() {
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{
-                color: focused ? "#1E1E1E" : color,
-                fontSize: 12,
-                fontWeight: focused ? "500" : "normal",
-                marginTop: 4,
+                color: focused ? Colors[theme].neutral.dark.darkest : color,
+                fontSize: 10,
+                fontWeight: focused ? "600" : "normal",
+                marginTop: 6,
               }}
             >
               Profile
@@ -78,7 +99,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name="person"
-              color={focused ? "#006FFD" : color}
+              color={focused ? Colors[theme].highlight.darkest : color}
               size={24}
             />
           ),
