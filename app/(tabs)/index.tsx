@@ -2,13 +2,13 @@ import { ListItem } from "@/components/ui/item/ListItem";
 import { SearchBox } from "@/components/ui/search/SearchBox";
 import { Colors } from "@/constants/Colors";
 import { Item } from "@/types/item";
+import { FlashList } from "@shopify/flash-list";
 import { useMemo } from "react";
 import {
 	ColorSchemeName,
-	FlatList,
 	StyleSheet,
 	useColorScheme,
-	View,
+	View
 } from "react-native";
 
 const TEST_DATA: Item[] = [];
@@ -31,18 +31,20 @@ export default function HomeScreen() {
         placeholder="Search items..."
         onSearch={(query) => console.log("Searching for:", query)}
       />
-      <FlatList
-        style={styles.flatList}
-        ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
-        data={TEST_DATA}
-        renderItem={({ item }) => (
-          <ListItem
-            item={item}
-            onPress={() => console.log("Pressed", item.id)}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+	  <View style={{width: "100%", flex: 1}}>
+		<FlashList
+			estimatedItemSize={100}
+			ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
+			data={TEST_DATA}
+			renderItem={({ item }) => (
+			<ListItem
+				item={item}
+				onPress={() => console.log("Pressed", item.id)}
+			/>
+			)}
+			keyExtractor={(item) => item.id}
+		/>
+	  </View>
     </View>
   );
 }
@@ -52,15 +54,13 @@ const getStyles = (theme: ColorSchemeName) => {
 
   return StyleSheet.create({
     container: {
+	  width: "100%",
       flex: 1,
       padding: 16,
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: colors.neutral.light.lightest,
       rowGap: 16,
-    },
-    flatList: {
-      width: "100%",
     },
   });
 };
