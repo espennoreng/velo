@@ -11,11 +11,13 @@ import {
 	useColorScheme,
 	View
 } from "react-native";
+import uuid from 'react-native-uuid';
+
 
 const TEST_DATA: Item[] = [];
 for (let i = 4; i <= 20; i++) {
   TEST_DATA.push({
-    id: i.toString(),
+    id: uuid.v4(),
     title: `Item ${i}`,
     description: `This is item ${i}`,
   });

@@ -15,18 +15,31 @@ export default function HomeLayout() {
       />
       <Stack.Screen
         name="item/[itemID]"
-        options={{
-          headerLeft: () => {
-            return (
-                <TouchableOpacity onPress={() => {router.back()}}>
+        options={({ route }) => {
+          // TODO: Swap with the Item name when we have a proper data source
+          const itemID =
+            route.params && "itemID" in route.params
+              ? route.params.itemID
+              : "Details";
+
+          return {
+            title: `${itemID}`,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity
+                  onPress={() => {
+                    router.back();
+                  }}
+                >
                   <Ionicons
                     name="chevron-back"
                     size={24}
                     color={Colors[theme].highlight.darkest}
                   />
                 </TouchableOpacity>
-            );
-          },
+              );
+            },
+          };
         }}
       />
     </Stack>
