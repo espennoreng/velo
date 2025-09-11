@@ -3,6 +3,7 @@ import { SearchBox } from "@/components/ui/search/SearchBox";
 import { Colors } from "@/constants/Colors";
 import { Item } from "@/types/item";
 import { FlashList } from "@shopify/flash-list";
+import { Link } from "expo-router";
 import { useMemo } from "react";
 import {
 	ColorSchemeName,
@@ -25,6 +26,7 @@ export default function HomeScreen() {
 
   const styles = useMemo(() => getStyles(theme), [theme]);
 
+
   return (
     <View style={styles.container}>
       <SearchBox
@@ -37,10 +39,14 @@ export default function HomeScreen() {
 			ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 			data={TEST_DATA}
 			renderItem={({ item }) => (
-			<ListItem
-				item={item}
-				onPress={() => console.log("Pressed", item.id)}
-			/>
+				<Link href={{
+					pathname: "/(tabs)/(home)/item/[itemID]",
+					params: { itemID: item.id }
+				}} asChild>
+					<ListItem
+						item={item}
+					/>
+				</Link>
 			)}
 			keyExtractor={(item) => item.id}
 		/>

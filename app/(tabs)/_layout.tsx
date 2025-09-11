@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
-import { Text, TouchableOpacity, useColorScheme } from "react-native";
+import { Text, useColorScheme } from "react-native";
 
 export default function TabLayout() {
   const theme = useColorScheme() ?? "light";
@@ -9,31 +9,12 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarStyle: {
-          borderTopWidth: 0,
-        },
-        headerShadowVisible: false,
-        headerRight: () => (
-          <TouchableOpacity
-            style={{ marginRight: 16 }}
-            onPress={() => {
-              /* Handle settings press */
-            }}
-          >
-			
-            <Ionicons
-              name="add"
-              size={32}
-              color={Colors[theme].neutral.dark.lightest}
-            />
-          </TouchableOpacity>
-        ),
+        headerShown: false,
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(home)"
         options={{
-          title: "Home",
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{
@@ -56,9 +37,8 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="members"
+        name="(members)/members"
         options={{
-          title: "Members",
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{
@@ -81,9 +61,8 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="(profile)/profile"
         options={{
-          title: "Profile",
           tabBarLabel: ({ focused, color }) => (
             <Text
               style={{

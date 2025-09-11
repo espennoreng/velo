@@ -20,6 +20,7 @@ export const Colors = {
 			lightest: '#8F9098',
 		},
 		light: {
+			medium: '#E8E9F1',
 			light: '#F8F9FE',
 			lightest: '#FFFFFF',
 		}
@@ -44,6 +45,7 @@ export const Colors = {
 			lightest: '#8F9098',
 		},
 		light: {
+			medium: '#E8E9F1',
 			light: '#F8F9FE',
 			lightest: '#FFFFFF',
 		}
