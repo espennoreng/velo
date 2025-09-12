@@ -66,7 +66,7 @@ const PROGRESS_ITEMS = [
     id: String(uuid.v4()),
     title: "Add hoc inspection",
     date: "21. Feb 2024, 14:32",
-	status: "in_progress",
+    status: "in_progress",
   },
   {
     id: String(uuid.v4()),
@@ -81,7 +81,6 @@ const PROGRESS_ITEMS = [
     status: "failed",
   },
 ];
-
 
 export default function ItemScreen() {
   const theme = useColorScheme() ?? "light";
@@ -102,7 +101,7 @@ export default function ItemScreen() {
     {
       title: "Synchronization",
       data: PROGRESS_ITEMS.filter((item) => item.status === activeSyncTab),
-	},
+    },
   ];
 
   const renderItem = ({
@@ -122,14 +121,25 @@ export default function ItemScreen() {
             data={item}
             keyExtractor={(lastInspection) => lastInspection.id}
             renderItem={({ item: lastInspection }) => (
-              <LastInspectionCard lastInspection={lastInspection} />
+              <Link asChild href={{
+				pathname: "/(tabs)/(home)/item/inspection/[inspectionID]",
+				params: { inspectionID: lastInspection.id },
+			  }}>
+                <LastInspectionCard lastInspection={lastInspection} />
+              </Link>
             )}
             ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
             showsHorizontalScrollIndicator={false}
           />
         );
       case "Synchronization":
-        return <ListProgress title={item.title} date={item.date} status={item.status} />;
+        return (
+          <ListProgress
+            title={item.title}
+            date={item.date}
+            status={item.status}
+          />
+        );
       default:
         return null;
     }
@@ -173,7 +183,7 @@ export default function ItemScreen() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{title}</Text>
         {title === "Last inspections" && (
-          <Link asChild href="/(tabs)/(home)">
+          <Link asChild href="/item/lastInspections">
             <TouchableOpacity>
               <Text style={styles.link}>See all</Text>
             </TouchableOpacity>
@@ -226,7 +236,7 @@ const getStyles = (theme: ColorSchemeName) => {
     },
     headerWrapper: {
       marginTop: 16,
-	  rowGap: 16,
+      rowGap: 16,
       backgroundColor: colors.neutral.light.lightest,
     },
     tabsContainer: {

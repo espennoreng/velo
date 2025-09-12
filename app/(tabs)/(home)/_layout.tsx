@@ -1,16 +1,36 @@
-import { Colors } from "@/constants/Colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { router, Stack } from "expo-router";
-import { TouchableOpacity, useColorScheme } from "react-native";
+import BackButtonInHeader from "@/components/BackButtonInHeader";
+import { Stack } from "expo-router";
+
+
 
 export default function HomeLayout() {
-  const theme = useColorScheme() ?? "light";
   return (
     <Stack>
       <Stack.Screen
         name="index"
         options={{
           title: "Home",
+        }}
+      />
+	  <Stack.Screen
+	  name="item/lastInspections"
+	  options={{
+		title: "Last Inspections",
+		headerLeft: () => <BackButtonInHeader />,
+	  }}
+	  />
+	  <Stack.Screen
+        name="item/inspection/[inspectionID]"
+        options={({ route }) => {
+          const inspectionID =
+            route.params && "inspectionID" in route.params
+              ? route.params.inspectionID
+              : "Details";
+
+          return {
+            title: `Inspection ${inspectionID}`,
+			headerLeft: () => <BackButtonInHeader />,
+          };
         }}
       />
       <Stack.Screen
@@ -23,23 +43,9 @@ export default function HomeLayout() {
               : "Details";
 
           return {
-            title: `${itemID}`,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    router.back();
-                  }}
-                >
-                  <Ionicons
-                    name="chevron-back"
-                    size={24}
-                    color={Colors[theme].highlight.darkest}
-                  />
-                </TouchableOpacity>
-              );
-            },
-          };
+            title: `Item ${itemID}`,
+			headerLeft: () => <BackButtonInHeader />,
+		  };
         }}
       />
     </Stack>

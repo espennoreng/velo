@@ -13,14 +13,16 @@ import {
 
 type LastInspectionCardProps = TouchableOpacityProps & {
   lastInspection: LastInspection;
+  fullWidth?: boolean;
 };
 
 export default function LastInspectionCard({
   lastInspection,
+  fullWidth = false,
   ...props
 }: LastInspectionCardProps) {
   const theme = useColorScheme() ?? "light";
-  const styles = getStyles(theme);
+  const styles = getStyles(theme, fullWidth);
 
   return (
     <TouchableOpacity {...props}>
@@ -46,16 +48,16 @@ export default function LastInspectionCard({
   );
 }
 
-const getStyles = (theme: ColorSchemeName) => {
+const getStyles = (theme: ColorSchemeName, fullWidth: boolean) => {
   const colors = Colors[theme ?? "light"];
   return StyleSheet.create({
     cardContainer: {
-	  width: 250,
+      width: fullWidth ? "100%" : 250,
       backgroundColor: colors.neutral.light.light,
       borderRadius: 16,
     },
 	imageContainer: {
-		height: 120,
+		height: fullWidth ? 180 : 120,
 		borderTopLeftRadius: 16,
 		borderTopRightRadius: 16,
 		width: "100%",
