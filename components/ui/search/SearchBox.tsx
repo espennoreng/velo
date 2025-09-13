@@ -41,6 +41,7 @@ const getStyles = (theme: ColorSchemeName) => {
 	input: {
 		flex: 1,
 		fontSize: 14,
+		paddingVertical: 16,
 		color: colors.neutral.dark.darkest,
 	},
   });
