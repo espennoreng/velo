@@ -1,10 +1,38 @@
 import BackButtonInHeader from "@/components/BackButtonInHeader";
-import { Stack } from "expo-router";
+import { Colors } from "@/constants/Colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Link, Stack } from "expo-router";
+import { TouchableOpacity, useColorScheme } from "react-native";
+
+const AddMemberButton = () => {
+  const theme = useColorScheme() ?? "light";
+  const colors = Colors[theme ?? "light"];
+  return (
+    <Link
+      href={{
+        pathname: "/(tabs)/(members)/invite/invite",
+        params: { inviteID: "new" },
+      }}
+      asChild
+    >
+      <TouchableOpacity style={{ marginRight: 16 }}>
+        <Ionicons
+          name="person-add"
+          size={24}
+          color={colors.highlight.darkest}
+        />
+      </TouchableOpacity>
+    </Link>
+  );
+};
 
 export default function MembersLayout() {
   return (
     <Stack>
-      <Stack.Screen name="members" options={{ title: "Members" }} />
+      <Stack.Screen
+        name="members"
+        options={{ title: "Members", headerRight: () => <AddMemberButton /> }}
+      />
       <Stack.Screen
         name="member/[memberID]"
         options={({ route }) => {
@@ -19,7 +47,7 @@ export default function MembersLayout() {
           };
         }}
       />
-	  <Stack.Screen
+      <Stack.Screen
         name="invite/[inviteID]"
         options={({ route }) => {
           const inviteID =
@@ -33,6 +61,14 @@ export default function MembersLayout() {
           };
         }}
       />
+	  <Stack.Screen
+		name="invite/invite"
+		options={{
+		  title: "Invite Member",
+		  headerLeft: () => <BackButtonInHeader />,
+		  presentation: "modal",
+		}}
+	  />
     </Stack>
   );
 }
