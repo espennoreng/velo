@@ -10,6 +10,11 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarStyle: {
+          borderTopWidth: 0, // Removes the top border
+          shadowOffset: { width: 0, height: 0 }, // Removes shadow for iOS
+          elevation: 0, // Removes elevation for Android
+        },
       }}
     >
       <Tabs.Screen
@@ -37,7 +42,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(members)/members"
+        name="(members)"
         options={{
           tabBarLabel: ({ focused, color }) => (
             <Text
