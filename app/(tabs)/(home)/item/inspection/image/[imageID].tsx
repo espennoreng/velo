@@ -1,18 +1,28 @@
-import { useLocalSearchParams } from "expo-router";
-import { Image } from "react-native";
+import { Colors } from "@/constants/Colors";
+import { Dimensions, Image, useColorScheme, View } from "react-native";
+import { SnapbackZoom } from "react-native-zoom-toolkit";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function InspectionImageScreen() {
-  const { imageID } = useLocalSearchParams<{ imageID: string }>();
+	const theme = useColorScheme() ?? "light";
+  const resizeConfig = {
+    size: { width: screenWidth, height: screenHeight },
+    aspectRatio: screenWidth / screenHeight,
+    scale: 1,
+  };
 
-  if (!imageID) {
-	return <Image source={{ uri: "https://picsum.photos/500/800" }} style={{ width: "100%", height: "100%" }} resizeMode="contain" />;
-  }
-  
   return (
-    <Image
-      source={{ uri: `https://picsum.photos/500/800?imageID=${imageID}` }}
-      style={{ width: "100%", height: "100%" }}
-      resizeMode="contain"
-    />
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: Colors[theme].neutral.light.lightest }}>
+      <SnapbackZoom resizeConfig={resizeConfig}>
+        <Image
+          source={{
+            uri: "https://superioraccesshire.com.au/cdn/shop/products/DuctLifter_2.jpg?v=1671024439&width=1445",
+          }}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="contain"
+        />
+      </SnapbackZoom>
+    </View>
   );
 }

@@ -31,12 +31,12 @@ const getStyles = (theme: ColorSchemeName) => {
 	container: {
 		width: '100%',
 		backgroundColor: colors.neutral.light.light,
-		paddingVertical: 12,
 		paddingHorizontal: 16,
 		overflow: 'hidden',
 		borderRadius: 24,
 		flexDirection: 'row',
 		columnGap: 12,
+		alignItems: 'center',
 	},
 	input: {
 		flex: 1,
