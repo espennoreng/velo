@@ -33,6 +33,20 @@ export default function HomeLayout() {
           };
         }}
       />
+	  <Stack.Screen
+        name="item/inspection/image/[imageID]"
+        options={({ route }) => {
+          const imageID =
+            route.params && "imageID" in route.params
+              ? route.params.imageID
+              : "Details";
+
+          return {
+            title: `Image ${imageID}`,
+			headerLeft: () => <BackButtonInHeader />,
+          };
+        }}
+      />
       <Stack.Screen
         name="item/[itemID]"
         options={({ route }) => {

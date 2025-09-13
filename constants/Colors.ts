@@ -15,6 +15,7 @@ export const Colors = {
 	},
 	neutral: {
 		dark: {
+			dark: "#2F3036",
 			darkest: '#1E1E1E',
 			light: '#71727A',
 			lightest: '#8F9098',
@@ -40,6 +41,7 @@ export const Colors = {
 	},
 	neutral: {
 		dark: {
+			dark: "#2F3036",
 			darkest: '#1E1E1E',
 			light: '#71727A',
 			lightest: '#8F9098',
