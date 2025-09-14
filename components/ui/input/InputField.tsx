@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import {
-	ColorSchemeName,
-	StyleSheet,
-	Text,
-	TextInput,
-	TextInputProps,
-	useColorScheme,
-	View,
+    ColorSchemeName,
+    StyleSheet,
+    Text,
+    TextInput,
+    TextInputProps,
+    useColorScheme,
+    View,
 } from "react-native";
 
 type InputFieldProps = TextInputProps & {
@@ -45,7 +45,7 @@ const getStyles = (theme: ColorSchemeName) => {
     input: {
       color: colors.neutral.dark.darkest,
       backgroundColor: colors.neutral.light.light,
-      borderRadius: 12,
+      borderRadius: 16,
       paddingHorizontal: 16,
       paddingVertical: 12,
     },

@@ -249,7 +249,7 @@ const getStyles = (theme: ColorSchemeName) => {
     },
     tab: {
       padding: 8,
-      borderRadius: 12,
+      borderRadius: 16,
       flex: 1,
       alignItems: "center",
     },

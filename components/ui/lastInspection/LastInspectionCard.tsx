@@ -1,14 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { LastInspection } from "@/types/lastInspection";
 import {
-	ColorSchemeName,
-	Image,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	TouchableOpacityProps,
-	useColorScheme,
-	View,
+    ColorSchemeName,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    TouchableOpacityProps,
+    useColorScheme,
+    View,
 } from "react-native";
 
 type LastInspectionCardProps = TouchableOpacityProps & {
@@ -84,7 +84,7 @@ const getStyles = (theme: ColorSchemeName, fullWidth: boolean) => {
 	tagContainer: {
 		position: "absolute",
 		backgroundColor: colors.highlight.darkest,
-		borderRadius: 12,
+		borderRadius: 16,
 		paddingHorizontal: 10,
 		paddingVertical: 4,
 		top: 16,

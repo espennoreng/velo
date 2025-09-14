@@ -40,7 +40,7 @@ const getStyles = (theme: ColorSchemeName) => {
       paddingHorizontal: 16,
       paddingVertical: 12,
       backgroundColor: colors.neutral.light.lightest,
-      borderRadius: 12,
+      borderRadius: 16,
       borderWidth: 1.5,
       borderColor: colors.highlight.darkest,
       justifyContent: "center",
@@ -56,7 +56,7 @@ const getStyles = (theme: ColorSchemeName) => {
 		rowGap: 8,
 		backgroundColor: colors.neutral.light.light,
 		padding: 16,
-		borderRadius: 12,
+		borderRadius: 16,
 	},
 	label: {
 		fontSize: 14,

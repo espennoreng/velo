@@ -28,7 +28,7 @@ const getStyles = (theme: ColorSchemeName) => {
 			paddingHorizontal: 16,
 			paddingVertical: 12,
 			backgroundColor: colors.highlight.darkest,
-			borderRadius: 12,
+			borderRadius: 16,
 			justifyContent: "center",
 			alignItems: "center",
 			width: "100%",

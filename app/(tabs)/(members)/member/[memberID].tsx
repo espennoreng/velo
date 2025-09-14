@@ -2,12 +2,12 @@ import { Colors } from "@/constants/Colors";
 import { Checkbox } from "expo-checkbox";
 import { useState } from "react";
 import {
-	ColorSchemeName,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	useColorScheme,
-	View,
+    ColorSchemeName,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useColorScheme,
+    View,
 } from "react-native";
 
 export default function MemberScreen() {
@@ -62,7 +62,7 @@ const getStyles = (theme: ColorSchemeName) => {
       paddingHorizontal: 16,
       paddingVertical: 12,
       backgroundColor: colors.neutral.light.lightest,
-      borderRadius: 12,
+      borderRadius: 16,
       borderWidth: 1.5,
       borderColor: colors.highlight.darkest,
       justifyContent: "center",
@@ -86,7 +86,7 @@ const getStyles = (theme: ColorSchemeName) => {
       columnGap: 16,
       backgroundColor: colors.neutral.light.light,
       padding: 16,
-      borderRadius: 12,
+      borderRadius: 16,
       flexDirection: "row",
       alignItems: "center",
     },

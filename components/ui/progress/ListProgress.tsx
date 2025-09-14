@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import {
-	ActivityIndicator,
-	ColorSchemeName,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	useColorScheme,
-	View,
+    ActivityIndicator,
+    ColorSchemeName,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    useColorScheme,
+    View,
 } from "react-native";
 
 type ListProgressProps = {
@@ -67,7 +67,7 @@ const getStyles = (theme: ColorSchemeName) => {
     },
 	retryButton: {
 		padding: 8,
-		borderRadius: 12,
+		borderRadius: 16,
 		borderWidth: 1,
 		borderColor: colors.highlight.darkest,
 	},
