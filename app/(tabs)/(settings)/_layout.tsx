@@ -24,6 +24,6 @@ export default function SettingsLayout() {
 		  headerLeft: () => <BackButtonInHeader />,
 		}}
 	  />
-    </Stack>
+	</Stack>
   );
 }

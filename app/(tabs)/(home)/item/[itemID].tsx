@@ -113,7 +113,17 @@ export default function ItemScreen() {
   }) => {
     switch (section.title) {
       case "Start a new inspection":
-        return <ListInspectionType inspectionType={item} />;
+        return (
+          <Link
+            asChild
+            href={{
+              pathname: "/(tabs)/(home)/item/inspection/conduct/[inspectionTypeID]",
+              params: { inspectionTypeID: item.id },
+            }}
+          >
+            <ListInspectionType inspectionType={item} />
+          </Link>
+        );
       case "Last inspections":
         return (
           <FlatList
@@ -121,10 +131,13 @@ export default function ItemScreen() {
             data={item}
             keyExtractor={(lastInspection) => lastInspection.id}
             renderItem={({ item: lastInspection }) => (
-              <Link asChild href={{
-				pathname: "/(tabs)/(home)/item/inspection/[inspectionID]",
-				params: { inspectionID: lastInspection.id },
-			  }}>
+              <Link
+                asChild
+                href={{
+                  pathname: "/(tabs)/(home)/item/inspection/[inspectionID]",
+                  params: { inspectionID: lastInspection.id },
+                }}
+              >
                 <LastInspectionCard lastInspection={lastInspection} />
               </Link>
             )}

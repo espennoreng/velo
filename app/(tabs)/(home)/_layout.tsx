@@ -1,8 +1,6 @@
 import BackButtonInHeader from "@/components/BackButtonInHeader";
 import { Stack } from "expo-router";
 
-
-
 export default function HomeLayout() {
   return (
     <Stack>
@@ -12,14 +10,14 @@ export default function HomeLayout() {
           title: "Home",
         }}
       />
-	  <Stack.Screen
-	  name="item/lastInspections"
-	  options={{
-		title: "Last Inspections",
-		headerLeft: () => <BackButtonInHeader />,
-	  }}
-	  />
-	  <Stack.Screen
+      <Stack.Screen
+        name="item/lastInspections"
+        options={{
+          title: "Last Inspections",
+          headerLeft: () => <BackButtonInHeader />,
+        }}
+      />
+      <Stack.Screen
         name="item/inspection/[inspectionID]"
         options={({ route }) => {
           const inspectionID =
@@ -29,11 +27,11 @@ export default function HomeLayout() {
 
           return {
             title: `Inspection ${inspectionID}`,
-			headerLeft: () => <BackButtonInHeader />,
+            headerLeft: () => <BackButtonInHeader />,
           };
         }}
       />
-	  <Stack.Screen
+      <Stack.Screen
         name="item/inspection/image/[imageID]"
         options={({ route }) => {
           const imageID =
@@ -43,7 +41,7 @@ export default function HomeLayout() {
 
           return {
             title: `Image ${imageID}`,
-			headerLeft: () => <BackButtonInHeader />,
+            headerLeft: () => <BackButtonInHeader />,
           };
         }}
       />
@@ -58,9 +56,15 @@ export default function HomeLayout() {
 
           return {
             title: `Item ${itemID}`,
-			headerLeft: () => <BackButtonInHeader />,
-		  };
+            headerLeft: () => <BackButtonInHeader />,
+          };
         }}
+      />
+      <Stack.Screen
+        name="item/inspection/conduct"
+		options={{
+			headerShown: false,
+		}}
       />
     </Stack>
   );

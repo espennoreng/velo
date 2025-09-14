@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { ColorSchemeName, StyleSheet, Text, useColorScheme, View } from "react-native";
 
-export default function StartInspection() {
+export default function CameraScreen() {
 	const theme = useColorScheme() ?? "light";
 	const styles = getStyles(theme);
   return (
