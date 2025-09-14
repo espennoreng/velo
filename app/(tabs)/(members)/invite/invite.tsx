@@ -7,7 +7,9 @@ export default function InviteScreen() {
 	const styles = getStyles(theme);
 	return (
 		<View style={styles.container}>
-			<InputField label="Email" placeholder="Enter the email you want to invite" />
+			<InputField
+			 keyboardType="email-address"
+			 label="Email" placeholder="Enter the email you want to invite" />
 			<TouchableOpacity style={styles.button}>
 				<Text style={styles.buttonText}>Send Invite</Text>
 			</TouchableOpacity>
