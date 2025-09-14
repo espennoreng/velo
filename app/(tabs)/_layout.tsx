@@ -66,7 +66,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(settings)/settings"
+        name="(settings)"
         options={{
           tabBarLabel: ({ focused, color }) => (
             <Text
