@@ -117,7 +117,7 @@ export default function ItemScreen() {
           <Link
             asChild
             href={{
-              pathname: "/(tabs)/(home)/item/inspection/conduct/[inspectionTypeID]",
+              pathname: "/(inspections)/[inspectionTypeID]",
               params: { inspectionTypeID: item.id },
             }}
           >

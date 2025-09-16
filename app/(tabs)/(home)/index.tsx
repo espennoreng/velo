@@ -35,9 +35,8 @@ export default function HomeScreen() {
         placeholder="Search items..."
         onSearch={(query) => console.log("Searching for:", query)}
       />
-	  <View style={{width: "100%", flex: 1}}>
+      <View style={{ width: "100%", flex: 1 }}>
 		<FlashList
-			estimatedItemSize={100}
 			ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
 			data={TEST_DATA}
 			renderItem={({ item }) => (
