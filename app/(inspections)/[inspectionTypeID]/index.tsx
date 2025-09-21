@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { router } from "expo-router";
+import { CameraView, useCameraPermissions } from "expo-camera";
+import { Link, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
 	Button,
@@ -37,10 +37,7 @@ export default function CameraScreen() {
   const theme = useColorScheme() ?? "light";
   const colors = Colors[theme ?? "light"];
   const styles = getStyles(theme);
-  const [facing, setFacing] = useState<CameraType>("back");
-  const [pictureSizes, setPictureSizes] = useState<string[]>([]);
   const [images, setImages] = useState<string[]>([]);
-  const [lensesIOS, setLensesIOS] = useState<string[]>([]);
   const [actions, setActions] = useState(TEST_INSPECTION_ACTIONS);
   const [flashMode, setFlashMode] = useState<"on" | "off" | "auto" | undefined>(
     undefined
@@ -70,6 +67,14 @@ export default function CameraScreen() {
       viewPosition: 0.5, // center the item
     });
   }, [step, actions.length]);
+
+  const handleRetake = () => {
+    setActions((prev) => {
+      const next = [...prev];
+      if (next[step]) next[step].url = null;
+      return next;
+    });
+  };
 
   const handleCameraReady = async () => {
     if (cameraRef.current) {
@@ -133,7 +138,7 @@ export default function CameraScreen() {
       <CameraView
         ref={cameraRef}
         style={styles.camera}
-        facing={facing}
+        facing="back"
         selectedLens={selectedLensIOS}
         autofocus="on"
         flash={flashMode}
@@ -148,7 +153,153 @@ export default function CameraScreen() {
               color={colors.neutral.light.lightest}
             />
           </TouchableOpacity>
+
+          {
+            // If all actions have a url, show the finish button
+            actions.every((action) => action.url) && (
+              <Link
+                href={{
+                  pathname: "/(inspections)/[inspectionTypeID]/summary",
+                  params: {
+                    inspectionTypeID: "test",
+                    images: images.join(","),
+                  },
+                }}
+                asChild
+              >
+                <TouchableOpacity
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 8,
+                    backgroundColor: colors.highlight.darkest,
+                    borderRadius: 16,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: colors.neutral.light.lightest,
+                      fontWeight: "600",
+                      fontSize: 16,
+                      borderRadius: 16,
+                    }}
+                  >
+                    Continue
+                  </Text>
+                </TouchableOpacity>
+              </Link>
+            )
+          }
+        </View>
+        <View style={styles.topContainerLower}>
+          <View style={styles.stepContainer}>
+            <FlatList
+              ref={listRef}
+              style={{ height: 200 }} // fixed viewport helps centering
+              showsVerticalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+              data={actions}
+              keyExtractor={(item) => item.step.toString()}
+              renderItem={({ item }) => {
+                const isActive = item.step === actions[step].step;
+                return (
+                  <TouchableOpacity
+                    style={[
+                      styles.stepButton,
+                      {
+                        opacity: isActive ? 1 : 0.5,
+                      },
+                    ]}
+                    onPress={() => setStep(item.step - 1)}
+                  >
+                    <Text
+                      style={[
+                        styles.stepText,
+                        {
+                          fontSize: isActive ? 18 : 14,
+                          textDecorationLine: !!item.url
+                            ? "line-through"
+                            : "none",
+                          textDecorationColor: colors.neutral.light.lightest,
+                          textDecorationStyle: "solid",
+                        },
+                      ]}
+                      numberOfLines={1}
+                    >
+                      {item.action}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              onScrollToIndexFailed={(info) => {
+                // Wait for measurement, then retry
+                setTimeout(() => {
+                  listRef.current?.scrollToIndex({
+                    index: Math.min(info.index, actions.length - 1),
+                    animated: true,
+                    viewPosition: 0.5,
+                  });
+                }, 50);
+              }}
+            />
+          </View>
+          <View style={styles.centerTextContainer} />
+        </View>
+      </SafeAreaView>
+      <SafeAreaView style={styles.bottomContainer}>
+        <View style={styles.lensSelectorContainer}>
+          {displayLenses.map(({ lens, zoom }) => {
+            // Check if the current selected lens's zoom matches this button's zoom
+            const isSelected = mapLensToZoomFactor[selectedLensIOS!] === zoom;
+
+            return (
+              <TouchableOpacity
+                key={lens} // Use the unique lens name for the key
+                style={[
+                  isSelected ? styles.lensButtonSelected : {},
+                  styles.lensButton,
+                ]}
+                onPress={() => setSelectedLensIOS(lens)}
+              >
+                <Text
+                  style={
+                    isSelected ? styles.selectedButton : styles.lensButtonText
+                  }
+                >
+                  {isSelected ? zoom + "x" : zoom}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <View style={styles.controlsRow}>
+          {/* if on a action that have been captures a picture of, then it should be possible to re-take it. 
+		 	else show empty view  
+		  */}
+          {actions[step]?.url ? (
+            <TouchableOpacity
+              style={styles.sideIconButton}
+              onPress={handleRetake}
+            >
+              <Ionicons
+                name="refresh"
+                size={24}
+                color={colors.neutral.light.lightest}
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={[styles.sideIconButton, { opacity: 0 }]} />
+          )}
+
+          {/* Center shutter */}
+          <TouchableOpacity style={styles.shutter} onPress={takePhoto} />
+
+          {/* Right flash */}
           <TouchableOpacity
+            style={styles.sideIconButton}
             onPress={() => {
               setFlashMode((prev) =>
                 prev === "on" ? "off" : prev === "off" ? "auto" : "on"
@@ -190,118 +341,6 @@ export default function CameraScreen() {
             )}
           </TouchableOpacity>
         </View>
-        <View style={styles.topContainerLower}>
-          <View style={styles.stepContainer}>
-            <FlatList
-              ref={listRef}
-              style={{ height: 150 }} // fixed viewport helps centering
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-              data={actions}
-              keyExtractor={(item) => item.step.toString()}
-              renderItem={({ item }) => {
-                const isActive = item.step === actions[step].step;
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.stepButton,
-                      {
-                        opacity: isActive ? 1 : 0.5,
-                      },
-                    ]}
-                    onPress={() => setStep(item.step - 1)}
-                  >
-                    <Text
-                      style={[
-                        styles.stepText,
-                        { fontSize: isActive ? 18 : 14 },
-                      ]}
-                      numberOfLines={1}
-                    >
-                      {item.action}
-                    </Text>
-                    <Ionicons
-                      name={item.url ? "checkmark-circle" : "ellipse-outline"}
-                      size={16}
-                      color={
-                        item.url ? "limegreen" : colors.neutral.light.lightest
-                      }
-                      style={{ marginLeft: 8, marginTop: 2 }}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-              onScrollToIndexFailed={(info) => {
-                // Wait for measurement, then retry
-                setTimeout(() => {
-                  listRef.current?.scrollToIndex({
-                    index: Math.min(info.index, actions.length - 1),
-                    animated: true,
-                    viewPosition: 0.5,
-                  });
-                }, 50);
-              }}
-            />
-          </View>
-          <View style={styles.centerTextContainer} />
-        </View>
-      </SafeAreaView>
-      <SafeAreaView style={styles.bottomContainer}>
-        {
-          // If all actions have a url, show the finish button
-		  actions.every((action) => action.url) && (
-            <TouchableOpacity
-			  style={{
-				padding: 12,
-				flexDirection: "row", alignItems: "center", gap: 8, backgroundColor: colors.highlight.darkest, borderRadius: 16 }}
-              onPress={() => {
-                // For now, just log the images and go back
-                console.log("Inspection completed with images:", images);
-                router.back();
-              }}
-            >
-              <Text
-                style={{
-                  color: colors.neutral.light.lightest,
-                  fontWeight: "600",
-                  fontSize: 16,
-                  borderRadius: 16,
-                }}
-              >
-                Continue to summary
-              </Text>
-			  <Ionicons name="chevron-forward" size={16} color={colors.neutral.light.lightest}/>
-            </TouchableOpacity>
-          )
-        }
-
-        <View style={styles.lensSelectorContainer}>
-          {displayLenses.map(({ lens, zoom }) => {
-            // Check if the current selected lens's zoom matches this button's zoom
-            const isSelected = mapLensToZoomFactor[selectedLensIOS!] === zoom;
-
-            return (
-              <TouchableOpacity
-                key={lens} // Use the unique lens name for the key
-                style={[
-                  isSelected ? styles.lensButtonSelected : {},
-                  styles.lensButton,
-                ]}
-                onPress={() => setSelectedLensIOS(lens)}
-              >
-                <Text
-                  style={
-                    isSelected ? styles.selectedButton : styles.lensButtonText
-                  }
-                >
-                  {isSelected ? zoom + "x" : zoom}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={takePhoto} />
       </SafeAreaView>
     </View>
   );
@@ -322,16 +361,16 @@ const getStyles = (theme: ColorSchemeName) => {
       flex: 1,
     },
     stepContainer: {
-      padding: 16,
       borderRadius: 16,
       flexDirection: "column",
       justifyContent: "space-between",
       rowGap: 8,
+      padding: 16,
+      //backgroundColor: "rgba(0,0,0,0.3)",
     },
     stepButton: {
-      padding: 12,
+      paddingVertical: 12,
       borderRadius: 8,
-      backgroundColor: "rgba(0,0,0,0.5)",
       justifyContent: "center",
       alignSelf: "flex-start",
       alignItems: "center",
@@ -400,6 +439,32 @@ const getStyles = (theme: ColorSchemeName) => {
       width: "100%",
       alignItems: "center",
       gap: 16,
+    },
+    controlsRow: {
+      width: "100%",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingHorizontal: 24,
+    },
+    shutter: {
+      // was: button
+      // flex: 1, // remove to prevent stretching
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      borderWidth: 6,
+      borderColor: colors.neutral.light.lightest,
+    },
+    sideIconButton: {
+      width: 50,
+      height: 50,
+      borderRadius: 40,
+      alignItems: "center",
+      justifyContent: "center",
+      //backgroundColor: "rgba(0,0,0,0.5)",
+      borderWidth: 0.5,
+      borderColor: "rgba(255,255,255,0.25)",
     },
     lensSelectorContainer: {
       position: "relative",
