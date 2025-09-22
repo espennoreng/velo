@@ -1,12 +1,11 @@
 import { Colors } from "@/constants/Colors";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { Link, router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
 	Button,
 	ColorSchemeName,
 	FlatList,
+	Image,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -125,7 +124,7 @@ export default function CameraScreen() {
     // Camera permissions are not granted yet.
     return (
       <View style={styles.container}>
-        <Text style={styles.message}>
+        <Text>
           We need your permission to show the camera
         </Text>
         <Button onPress={requestPermission} title="grant permission" />
@@ -134,7 +133,7 @@ export default function CameraScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <CameraView
         ref={cameraRef}
         style={styles.camera}
@@ -144,205 +143,62 @@ export default function CameraScreen() {
         flash={flashMode}
         onCameraReady={handleCameraReady}
       />
-      <SafeAreaView style={styles.topContainer}>
-        <View style={styles.topContainerUpper}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons
-              name="arrow-back"
-              size={24}
-              color={colors.neutral.light.lightest}
-            />
-          </TouchableOpacity>
 
-          {
-            // If all actions have a url, show the finish button
-            actions.every((action) => action.url) && (
-              <Link
-                href={{
-                  pathname: "/(inspections)/[inspectionTypeID]/summary",
-                  params: {
-                    inspectionTypeID: "test",
-                    images: images.join(","),
-                  },
-                }}
-                asChild
-              >
-                <TouchableOpacity
-                  style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 8,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 8,
-                    backgroundColor: colors.highlight.darkest,
-                    borderRadius: 16,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: colors.neutral.light.lightest,
-                      fontWeight: "600",
-                      fontSize: 16,
-                      borderRadius: 16,
-                    }}
-                  >
-                    Continue
-                  </Text>
-                </TouchableOpacity>
-              </Link>
-            )
-          }
-        </View>
-        <View style={styles.topContainerLower}>
-          <View style={styles.stepContainer}>
-            <FlatList
-              ref={listRef}
-              style={{ height: 200 }} // fixed viewport helps centering
-              showsVerticalScrollIndicator={false}
-              ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-              data={actions}
-              keyExtractor={(item) => item.step.toString()}
-              renderItem={({ item }) => {
-                const isActive = item.step === actions[step].step;
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.stepButton,
-                      {
-                        opacity: isActive ? 1 : 0.5,
-                      },
-                    ]}
-                    onPress={() => setStep(item.step - 1)}
-                  >
-                    <Text
-                      style={[
-                        styles.stepText,
-                        {
-                          fontSize: isActive ? 18 : 14,
-                          textDecorationLine: !!item.url
-                            ? "line-through"
-                            : "none",
-                          textDecorationColor: colors.neutral.light.lightest,
-                          textDecorationStyle: "solid",
-                        },
-                      ]}
-                      numberOfLines={1}
-                    >
-                      {item.action}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-              onScrollToIndexFailed={(info) => {
-                // Wait for measurement, then retry
-                setTimeout(() => {
-                  listRef.current?.scrollToIndex({
-                    index: Math.min(info.index, actions.length - 1),
-                    animated: true,
-                    viewPosition: 0.5,
-                  });
-                }, 50);
-              }}
-            />
-          </View>
-          <View style={styles.centerTextContainer} />
-        </View>
-      </SafeAreaView>
-      <SafeAreaView style={styles.bottomContainer}>
-        <View style={styles.lensSelectorContainer}>
-          {displayLenses.map(({ lens, zoom }) => {
-            // Check if the current selected lens's zoom matches this button's zoom
-            const isSelected = mapLensToZoomFactor[selectedLensIOS!] === zoom;
-
-            return (
-              <TouchableOpacity
-                key={lens} // Use the unique lens name for the key
-                style={[
-                  isSelected ? styles.lensButtonSelected : {},
-                  styles.lensButton,
-                ]}
-                onPress={() => setSelectedLensIOS(lens)}
-              >
-                <Text
-                  style={
-                    isSelected ? styles.selectedButton : styles.lensButtonText
-                  }
-                >
-                  {isSelected ? zoom + "x" : zoom}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-
-        <View style={styles.controlsRow}>
-          {/* if on a action that have been captures a picture of, then it should be possible to re-take it. 
-		 	else show empty view  
-		  */}
-          {actions[step]?.url ? (
-            <TouchableOpacity
-              style={styles.sideIconButton}
-              onPress={handleRetake}
-            >
-              <Ionicons
-                name="refresh"
-                size={24}
-                color={colors.neutral.light.lightest}
+      <View>
+        <FlatList
+          style={{ padding: 8 }}
+          data={images}
+          ItemSeparatorComponent={() => <View style={{ width: 8 }} />}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => console.log("Pressed image")}>
+              <Image
+                source={{ uri: item }}
+                style={{ width: 100, height: 100 }}
               />
             </TouchableOpacity>
-          ) : (
-            <View style={[styles.sideIconButton, { opacity: 0 }]} />
           )}
+          horizontal
+        />
+      </View>
 
-          {/* Center shutter */}
-          <TouchableOpacity style={styles.shutter} onPress={takePhoto} />
-
-          {/* Right flash */}
-          <TouchableOpacity
-            style={styles.sideIconButton}
-            onPress={() => {
-              setFlashMode((prev) =>
-                prev === "on" ? "off" : prev === "off" ? "auto" : "on"
-              );
+      <View
+        style={{
+          padding: 16,
+          backgroundColor: colors.neutral.dark.darkest,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity onPress={takePhoto}>
+          <Text style={{ color: colors.neutral.light.lightest }}
+		  >Go back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.neutral.dark.darkest,
+            padding: 4,
+            borderRadius: 50,
+            borderWidth: 4,
+            borderColor: colors.neutral.light.lightest,
+          }}
+          onPress={takePhoto}
+        >
+          <View
+            style={{
+              backgroundColor: colors.neutral.light.lightest,
+              padding: 32,
+              borderRadius: 50,
             }}
-          >
-            {flashMode === "on" ? (
-              <Ionicons
-                name="flash"
-                size={24}
-                color={colors.neutral.light.lightest}
-              />
-            ) : flashMode === "off" ? (
-              <Ionicons
-                name="flash-off"
-                size={24}
-                color={colors.neutral.light.lightest}
-              />
-            ) : (
-              <View>
-                <Ionicons
-                  name="flash"
-                  size={24}
-                  color={colors.neutral.light.lightest}
-                />
-                <Text
-                  style={{
-                    position: "absolute",
-                    bottom: -2,
-                    right: -2,
-                    fontSize: 10,
-                    color: colors.neutral.light.lightest,
-                    fontWeight: "600",
-                  }}
-                >
-                  A
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
-    </View>
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={takePhoto}>
+          <Text
+            style={{ color: colors.neutral.light.lightest }}
+          >Continue</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -352,150 +208,10 @@ const getStyles = (theme: ColorSchemeName) => {
     container: {
       flex: 1,
       justifyContent: "center",
-    },
-    message: {
-      textAlign: "center",
-      paddingBottom: 10,
+      backgroundColor: colors.neutral.dark.darkest,
     },
     camera: {
       flex: 1,
-    },
-    stepContainer: {
-      borderRadius: 16,
-      flexDirection: "column",
-      justifyContent: "space-between",
-      rowGap: 8,
-      padding: 16,
-      //backgroundColor: "rgba(0,0,0,0.3)",
-    },
-    stepButton: {
-      paddingVertical: 12,
-      borderRadius: 8,
-      justifyContent: "center",
-      alignSelf: "flex-start",
-      alignItems: "center",
-      flexDirection: "row",
-    },
-    stepText: {
-      fontWeight: "600",
-      color: colors.neutral.light.lightest,
-    },
-    centerTextContainer: {
-      position: "absolute",
-      top: 16,
-      left: 0,
-      right: 0,
-      alignItems: "center",
-      paddingHorizontal: 40,
-    },
-    centerText: {
-      color: colors.neutral.light.lightest,
-      fontWeight: "600",
-      textAlign: "center",
-    },
-    buttonContainer: {
-      position: "absolute",
-      bottom: 64,
-      flexDirection: "row",
-      backgroundColor: "transparent",
-      width: "100%",
-      paddingHorizontal: 64,
-    },
-    button: {
-      flex: 1,
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      borderWidth: 6,
-      borderColor: colors.neutral.light.lightest,
-    },
-    text: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: "white",
-    },
-    topContainer: {
-      position: "absolute",
-      top: 0,
-      width: "100%",
-
-      paddingHorizontal: 16,
-      paddingTop: 16,
-      gap: 16,
-    },
-    topContainerUpper: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    topContainerLower: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-    bottomContainer: {
-      position: "absolute",
-      bottom: 0,
-      width: "100%",
-      alignItems: "center",
-      gap: 16,
-    },
-    controlsRow: {
-      width: "100%",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingHorizontal: 24,
-    },
-    shutter: {
-      // was: button
-      // flex: 1, // remove to prevent stretching
-      width: 80,
-      height: 80,
-      borderRadius: 40,
-      borderWidth: 6,
-      borderColor: colors.neutral.light.lightest,
-    },
-    sideIconButton: {
-      width: 50,
-      height: 50,
-      borderRadius: 40,
-      alignItems: "center",
-      justifyContent: "center",
-      //backgroundColor: "rgba(0,0,0,0.5)",
-      borderWidth: 0.5,
-      borderColor: "rgba(255,255,255,0.25)",
-    },
-    lensSelectorContainer: {
-      position: "relative",
-      alignSelf: "center",
-      flexDirection: "row",
-      backgroundColor: "rgba(0,0,0,0.5)",
-      borderRadius: 20,
-      padding: 1.5,
-      borderWidth: 0.2,
-      borderColor: "rgba(255,255,255,0.2)",
-      columnGap: 8,
-    },
-    lensButton: {
-      width: 32,
-      height: 32,
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: 20,
-    },
-    lensButtonSelected: {
-      backgroundColor: colors.highlight.darkest,
-    },
-    lensButtonText: {
-      fontSize: 10,
-      fontWeight: "600",
-      color: colors.neutral.light.lightest,
-    },
-    selectedButton: {
-      fontWeight: "600",
-      fontSize: 12,
-      color: colors.neutral.light.lightest,
     },
   });
 };
